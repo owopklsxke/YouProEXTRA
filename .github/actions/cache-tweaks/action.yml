@@ -71,9 +71,6 @@ inputs:
   ytsilentvote_commit:
     required: false
     default: ''
-  youshare_commit:
-    required: false
-    default: ''
   gonerino_commit:
     required: false
     default: ''
@@ -120,7 +117,6 @@ outputs:
   cache_youslider_hit:     { value: "${{ steps.cache_youslider.outputs.cache-hit }}" }
   cache_youchoose_hit:     { value: "${{ steps.cache_youchoose.outputs.cache-hit }}" }
   cache_ytsilentvote_hit:  { value: "${{ steps.cache_ytsilentvote.outputs.cache-hit }}" }
-  cache_youshare_hit:      { value: "${{ steps.cache_youshare.outputs.cache-hit }}" }
   cache_gonerino_hit:      { value: "${{ steps.cache_gonerino.outputs.cache-hit }}" }
   cache_ytweaks_hit:       { value: "${{ steps.cache_ytweaks.outputs.cache-hit }}" }
   cache_yougetcaption_hit: { value: "${{ steps.cache_yougetcaption.outputs.cache-hit }}" }
@@ -232,12 +228,6 @@ runs:
         key: ytsilentvote-${{ inputs.ytsilentvote_commit }}-sdk${{ inputs.sdk_version }}
 
     - uses: actions/cache@v5.0.5
-      id: cache_youshare
-      with:
-        path: ${{ github.workspace }}/youshare.deb
-        key: youshare-${{ inputs.youshare_commit }}-sdk${{ inputs.sdk_version }}
-
-    - uses: actions/cache@v5.0.5
       if: inputs.gonerino_commit != ''
       id: cache_gonerino
       with:
@@ -270,7 +260,7 @@ runs:
       id: cache_isponsorblock
       with:
         path: ${{ github.workspace }}/isponsorblock.deb
-        key: isponsorblock-${{ inputs.isponsorblock_commit }}-sdk${{ inputs.sdk_version }}
+        key: isponsorblock-v1-${{ inputs.isponsorblock_commit }}-sdk${{ inputs.sdk_version }}
 
     - uses: actions/cache@v5.0.5
       if: inputs.demc == 'true'

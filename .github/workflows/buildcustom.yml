@@ -161,15 +161,21 @@ jobs:
           for f in *.deb; do
             [ -f "$f" ] && tweaks="$tweaks $f"
           done
-          cyan -i youtube.ipa -o YouProExtra_${{ env.YT_VERSION }}_v${{ env.CUSTOM_DEB_VERSION }}.ipa -uwesf $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
+          cyan -i youtube.ipa -o YouProExtra_${{ env.YT_VERSION }}_${{ env.CUSTOM_DEB_VERSION }}.ipa -uwesf $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
           
       - name: Create a Draft Release
-        uses: softprops/action-gh-release@v3
-        with:
-          tag_name: youproextra-customdeb-ipa${{ github.run_number }}
-          name: YouProExtra_${{ env.YT_VERSION }}_v${{ env.CUSTOM_DEB_VERSION }} (${{ github.run_number }})
-          files: YouProExtra_${{ env.YT_VERSION }}_v${{ env.CUSTOM_DEB_VERSION }}.ipa
-          draft: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          i=1
+          while gh release view "youproextra-customdeb-ipa${i}" --repo "$GITHUB_REPOSITORY" &>/dev/null; do
+            i=$(( i + 1 ))
+          done
+          gh release create "youproextra-customdeb-ipa${i}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "YouProExtra_${{ env.YT_VERSION }}_${{ env.CUSTOM_DEB_VERSION }}" \
+            --draft \
+            YouProExtra_${{ env.YT_VERSION }}_${{ env.CUSTOM_DEB_VERSION }}.ipa
 
       - name: Job Summary - Build Complete
         run: echo -e '### 🛠️ Build IPA with Custom tweak Complete!' >> $GITHUB_STEP_SUMMARY
